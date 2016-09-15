@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace ClipboardCompare.Core
 {
     public class ComparisonManager
     {
+        private const string WorkingDirectory = "../../Temp";
         private readonly string _comparisonToolPath = ConfigurationManager.AppSettings["CompareToolPath"];
         private readonly string _comparisonToolArguments = ConfigurationManager.AppSettings["CompareToolArgs"];
 
@@ -31,7 +29,7 @@ namespace ClipboardCompare.Core
 
         public string[] CreateTempFiles()
         {
-            string workDirPath = GetWorkingDirectoryPath();
+            string workDirPath = WorkingDirectory;
 
             DirectoryInfo di = new DirectoryInfo(workDirPath);
             if (!di.Exists)
@@ -50,7 +48,7 @@ namespace ClipboardCompare.Core
 
         public void ExecuteCleanup()
         {
-            string workDirPath = GetWorkingDirectoryPath();
+            string workDirPath = WorkingDirectory;
 
             DirectoryInfo di = new DirectoryInfo(workDirPath);
             if (di.Exists)
@@ -61,12 +59,6 @@ namespace ClipboardCompare.Core
                     fi.Delete();
                 });
             }
-        }
-
-        private string GetWorkingDirectoryPath()
-        {
-            string workDirPath = "../../Temp";
-            return workDirPath;
         }
 
         public void OpenComparisonProcess()
@@ -113,7 +105,7 @@ namespace ClipboardCompare.Core
                     File.Delete(tempFiles[1]);
                 }
 
-                MessageBox.Show(e.Message);
+                MessageBox.Show(e.Message + "Make sure your CompareToolPath and the CompareToolArgs app settings are correct in app.config.");
             }
         }
     }
